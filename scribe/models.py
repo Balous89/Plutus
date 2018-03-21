@@ -23,3 +23,9 @@ class TransitRouteModel(models.Model):
 
     # TODO: add datetime.date.today()
     transit_date = models.DateField(auto_now_add=True)
+
+    def __str__(self):
+        return self.transit_date
+
+
+ #TODO: add disctance field saved after get response from google maps api
