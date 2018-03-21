@@ -6,7 +6,7 @@
 {# TODO: refactor and beautify, add labels etc. #}
 {# THIS IS PROTOTYPE!! #}
 <div class="container" style="margin: 0 auto;">
-  <form method="POST">
+  <form method="POST" id='add_transit_route'>
       {% csrf_token %}
       {% for field in transit_points_form %}
       <p>{{ field.label_tag }} </br>
