@@ -1,0 +1,32 @@
+{% extends 'scribe/base.html' %}
+{% block content %}
+{% load widget_tweaks %}
+{% load static %}
+
+{# TODO: refactor and beautify, add labels etc. #}
+{# THIS IS PROTOTYPE!! #}
+<div class="container" style="margin: 0 auto;">
+  <form method="POST">
+      {% csrf_token %}
+      {% for field in transit_points_form %}
+      <p>{{ field.label_tag }} </br>
+        {{ field }}</p>
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      {% endfor %}
+      <input type="submit" name="" value="Calculate!" class='btn btn-primary'>
+  </form>
+</div>
+
+
+
+
+
+
+
+
+
+
+
+{% endblock %}
