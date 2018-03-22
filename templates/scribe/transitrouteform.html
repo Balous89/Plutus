@@ -18,16 +18,48 @@
       <input type="submit" name="" value="Calculate!" class='btn btn-primary'>
   </form>
 </div>
-
+<p></p>
 
 <div class="container" style="margin: 0 auto;">
-  {% for x in all_rides %}
-    {% for field in x %}
-      {{ x.field }}
-    {% endfor %}
-  {% endfor %}
+  <table class="table table-striped">
+    <thead>
+        <tr>
+          <th></th>
+          <th>Ulica</th>
+          <th>Numer</th>
+          <th>Miasto</th>
+          <th>Wojewodztwo</th>
+          <th></th>
+          <th>Ulica</th>
+          <th>Numer</th>
+          <th>Miasto</th>
+          <th>Wojewodztwo</th>
+          <th>Data</th>
+          <th>Odleglosc</th>
+          <th>Zaplata</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for route in all_routs %}
+        <tr>
+          <td>Z</td>
+          <td>{{ route.source_adress_street }}</td>
+          <td>{{ route.source_adress_number }}</td>
+          <td>{{ route.source_adress_city }}</td>
+          <td>{{ route.source_adress_district }}</td>
+          <td>DO</td>
+          <td>{{ route.endpoint_adress_street }}</td>
+          <td>{{ route.endpoint_adress_number }}</td>
+          <td>{{ route.endpoint_adress_city }}</td>
+          <td>{{ route.endpoint_adress_district }}</td>
+          <td>{{ route.transit_date|date:'Y-m-d' }}</td>
+          <td>{{ route.distance_in_km }} km</td>
+          <td>{{ route.paycheck_for_route }} PLN</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
 </div>
-
 
 
 

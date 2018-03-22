@@ -1,5 +1,5 @@
 from django.shortcuts import render
-#from urllib.request import urlopen
+# from urllib.request import urlopen
 import requests
 import json
 
@@ -16,8 +16,11 @@ class GetDataFromGoogleMap:
             source_district + '&destinations=' + end_no + ',' + end_street + ',' + end_city + \
             ',' + end_district + '&key=' + google_api_key
 
-        json_string = requests.get(url)
-        json_data = json_string.json()
+        json_from_google_api = requests.get(url)
+        json_data = json_from_google_api.json()
 
-        print(json_data['rows'][0]['elements'][0]['distance']['text'])
-        return(json_data['rows'][0]['elements'][0]['distance']['text'])
+        distance = json_data['rows'][0]['elements'][0]['distance']['text'].replace(
+            'km', '')
+
+        print(distance)
+        return(float(distance))
