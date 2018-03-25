@@ -1,13 +1,15 @@
 from django.db import models
 from scribe.includes.districts import districts
 from django.utils import timezone
+
 import datetime
 
 
 class TransitRouteModel(models.Model):
 
     # TODO: add default = request.user.default_no
-    source_adress_number = models.CharField(max_length=40)
+    source_adress_number = models.CharField(
+        max_length=40)
     # TODO: add default = request.user.default_street
     source_adress_street = models.CharField(max_length=40)
     # TODO: add default = request.user.default_city
@@ -35,6 +37,6 @@ class TransitRouteModel(models.Model):
     transit_date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
-        return self.source_adress_city
+        return self.source_adress_city + self.endpoint_adress_city + self.transit_date
 
  # TODO: add disctance field saved after get response from google maps api

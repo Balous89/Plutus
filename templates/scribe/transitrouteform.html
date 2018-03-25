@@ -1,27 +1,73 @@
 {% extends 'scribe/base.html' %}
-{% block content %}
+
 {% load widget_tweaks %}
 {% load static %}
+{% load source_form_fields from scribe_extras %}
+{% load label_form_fields from scribe_extras %}
+
+
+
 
 {# TODO: refactor and beautify, add labels etc. #}
 {# THIS IS PROTOTYPE!! #}
+
+
+{% block content %}
+
+
 <div class="container" style="margin: 0 auto;">
-  <form method="POST" id='add_transit_route'>
-      {% csrf_token %}
-      {% for field in transit_points_form %}
+  <form method="POST" id='add_transit_route' action=''> {% csrf_token %}
+    <fieldset>
+      <div class ='jumbotron'>
+        <h1>Poczatek trasy</h1>
+        <div class='row'>
+          <div class="form-group col-sm-3">
+          {% for field in transit_points_form %}
       <p>{{ field.label_tag }} </br>
         {{ field }}</p>
         {% for error in field.errors %}
           <p style="color: red">{{ error }}</p>
         {% endfor %}
       {% endfor %}
-      <input type="submit" name="" value="Calculate!" class='btn btn-primary'>
+
+
+      </div>
+      </div>
+      </div>
+     
+        
+
+      
+
+
+
+
+
+
+    </fieldset>
+      
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+      <input type="submit" name="" value="Calculate!" class='btn btn-primary' id="calculate">
   </form>
 </div>
 <p></p>
 
+
 <div class="container" style="margin: 0 auto;">
-  <table class="table table-striped">
+  <table class="table table-striped" id='here'>
     <thead>
         <tr>
           <th></th>
@@ -34,12 +80,12 @@
           <th>Numer</th>
           <th>Miasto</th>
           <th>Wojewodztwo</th>
-          <th>Data</th>
           <th>Odleglosc</th>
           <th>Zaplata</th>
+          <th>Data</th>        
         </tr>
       </thead>
-      <tbody>
+      <tbody id='tbody'>
         {% for route in all_routs %}
         <tr>
           <td>Z</td>
@@ -52,9 +98,9 @@
           <td>{{ route.endpoint_adress_number }}</td>
           <td>{{ route.endpoint_adress_city }}</td>
           <td>{{ route.endpoint_adress_district }}</td>
-          <td>{{ route.transit_date|date:'Y-m-d' }}</td>
           <td>{{ route.distance_in_km }} km</td>
           <td>{{ route.paycheck_for_route }} PLN</td>
+          <td>{{ route.transit_date|date:'Y-m-d' }}</td>
         </tr>
         {% endfor %}
       </tbody>
@@ -63,5 +109,48 @@
 
 
 
+
+{% endblock %}
+
+
+{% block javascript %}
+
+<script type = "text/javascript" language = "javascript">
+$( "#add_transit_route" ).submit(function( event ) {
+
+  // Stop form from submitting normally
+  event.preventDefault();
+
+  // Get some values from elements on the page:
+  var $form = $( this ),
+    term = $form.serialize(),
+    url = $form.attr("action");
+
+  // Send the data using post
+  var posting = $.post( url,  term  );
+
+  // Put the results in a div
+  posting.done(function(data) {
+    $('#here').prepend('<tr><td>' + data.frome + '</td><td>' + 
+      data.source_adress_street + '</td><td>' + 
+      data.source_adress_number + '</td><td>' + 
+      data.source_adress_city + '</td><td>' + 
+      data.source_adress_district + '</td><td>' +  
+      data.to + '</td><td>' + 
+      data.endpoint_adress_street + '</td><td>' +  
+      data.endpoint_adress_number + '</td><td>' + 
+      data.endpoint_adress_city + '</td><td>' +  
+      data.endpoint_adress_district + '</td><td>' + 
+      data.distance_in_km + '</td><td>' + 
+      data.paycheck_for_route + '</td><td>' + 
+      data.transit_date + '</td></tr>'
+      );
+    
+       
+  });
+  $('#add_transit_route')[0].reset();
+});
+
+ </script>
 
 {% endblock %}

@@ -1,0 +1,81 @@
+
+
+      <fieldset>
+        <legend>{{ title }}</legend>
+        {% for field in form %}
+            <div class="control-group {%if field.errors %}error{%endif%}">
+                <div class="input-group controls">
+                    <label class="input-group-addon control-label" id="{{field.label|safe}}">{{ field.label }}</label>
+                    {% render_field field type="text" class="form-control" placeholder="" aria-describedby="field.label|safe" %}
+                </div>
+                    {% for error in field.errors %}
+                         <div class="alert alert-danger">
+                            <strong>{{ error|escape }}</strong>
+                         </div>
+                    {% endfor %}
+
+                    {% if field.help_text %}
+                        <p class="help-inline">{{ field.help_text|safe }}</p>
+                    {% endif %}
+            </div>
+
+        {% endfor %}
+    </fieldset>
+
+
+
+
+
+
+
+
+
+      {% csrf_token %}
+      {% for field in transit_points_form %}
+      <p>{{ field.label_tag }} </br>
+        {{ field }}</p>
+        {% for error in field.errors %}
+          <p style="color: red">{{ error }}</p>
+        {% endfor %}
+      {% endfor %}
+
+
+      {% source_form_fields field.label %}{% source_form_fields field %}
+
+
+
+
+
+
+
+      from django import template
+
+
+register = template.Library()
+
+
+@register.simple_tag
+def source_form_fields(value):
+    if value.name in ('source_adress_number', 'source_adress_street',
+                      'source_adress_city', 'source_adress_district'):
+        return value
+    else:
+        return ('')
+
+
+@register.simple_tag
+def label_form_fields(value):
+    if value.name in ('source_adress_number', 'source_adress_street',
+                      'source_adress_city', 'source_adress_district'):
+        return value.label
+    else:
+        return ('')
+
+
+@register.simple_tag
+def endpoint_form_fields(value):
+    if value.name in ('endpoint_adress_number', 'endpoint_adress_street',
+                      'endpoint_adress_city', 'endpoint_adress_district'):
+        return value
+    else:
+        return ('')
