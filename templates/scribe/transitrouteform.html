@@ -2,9 +2,6 @@
 
 {% load widget_tweaks %}
 {% load static %}
-{% load source_form_fields from scribe_extras %}
-{% load label_form_fields from scribe_extras %}
-
 
 
 
@@ -15,52 +12,30 @@
 {% block content %}
 
 
-<div class="container" style="margin: 0 auto;">
+<div class="container">
   <form method="POST" id='add_transit_route' action=''> {% csrf_token %}
-    <fieldset>
-      <div class ='jumbotron'>
-        <h1>Poczatek trasy</h1>
-        <div class='row'>
-          <div class="form-group col-sm-3">
-          {% for field in transit_points_form %}
-      <p>{{ field.label_tag }} </br>
-        {{ field }}</p>
-        {% for error in field.errors %}
-          <p style="color: red">{{ error }}</p>
-        {% endfor %}
-      {% endfor %}
-
-
+    
+      <div class='row jumbotron text-center'>
+        <div class ='col'>
+          <h1>Poczatek trasy</h1>
+            {% for field in transit_points_form|slice:":4" %}
+              <p>{{ field.label_tag }} </br>
+            {{ field }}</p>
+            {% for error in field.errors %}|
+              <p style="color: red">{{ error }}</p>
+            {% endfor %}{% endfor %}
+        </div>
+        <div class ='col'>
+          <h1>Cel trasy</h1>
+            {% for field in transit_points_form|slice:"4:" %}
+              <p>{{ field.label_tag }} </br>
+            {{ field }}</p>
+            {% for error in field.errors %}|
+              <p style="color: red">{{ error }}</p>
+            {% endfor %}{% endfor %}
+        </div>
+      <input type="submit" name="" value="Oblicz" class='btn btn-primary' id="calculate">
       </div>
-      </div>
-      </div>
-     
-        
-
-      
-
-
-
-
-
-
-    </fieldset>
-      
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-      <input type="submit" name="" value="Calculate!" class='btn btn-primary' id="calculate">
   </form>
 </div>
 <p></p>
@@ -141,14 +116,14 @@ $( "#add_transit_route" ).submit(function( event ) {
       data.endpoint_adress_number + '</td><td>' + 
       data.endpoint_adress_city + '</td><td>' +  
       data.endpoint_adress_district + '</td><td>' + 
-      data.distance_in_km + '</td><td>' + 
-      data.paycheck_for_route + '</td><td>' + 
+      data.distance_in_km + ' km' + '</td><td>' + 
+      data.paycheck_for_route + ' PLN' + '</td><td>' + 
       data.transit_date + '</td></tr>'
       );
     
        
   });
-  $('#add_transit_route')[0].reset();
+  /*$('#add_transit_route')[0].reset();*/ /*TODO UNCOMMENT THIS!*/
 });
 
  </script>

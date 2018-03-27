@@ -48,34 +48,36 @@
 
 
 
-      from django import template
+    
 
 
-register = template.Library()
 
 
-@register.simple_tag
-def source_form_fields(value):
-    if value.name in ('source_adress_number', 'source_adress_street',
-                      'source_adress_city', 'source_adress_district'):
-        return value
-    else:
-        return ('')
 
 
-@register.simple_tag
-def label_form_fields(value):
-    if value.name in ('source_adress_number', 'source_adress_street',
-                      'source_adress_city', 'source_adress_district'):
-        return value.label
-    else:
-        return ('')
 
 
-@register.simple_tag
-def endpoint_form_fields(value):
-    if value.name in ('endpoint_adress_number', 'endpoint_adress_street',
-                      'endpoint_adress_city', 'endpoint_adress_district'):
-        return value
-    else:
-        return ('')
+
+
+
+ <div class='row jumbotron text-center'>
+        <div class ='col'>
+          <h1>Poczatek trasy</h1>
+            {% for field in transit_points_list|slice:":4" %}
+              <p>{{ field.label_tag }} </br>
+            {{ field }}</p>
+            {% for error in field.errors %}|
+              <p style="color: red">{{ error }}</p>
+            {% endfor %}{% endfor %}
+        </div>
+        <div class ='col'>
+          <h1>Cel trasy</h1>
+            {% for field in transit_points_list|slice:"4:8" %}
+              <p>{{ field.label_tag }} </br>
+            {{ field }}</p>
+            {% for error in field.errors %}|
+              <p style="color: red">{{ error }}</p>
+            {% endfor %}{% endfor %}
+        </div>
+      <input type="submit" name="" value="Oblicz" class='btn btn-primary' id="calculate">
+      </div>
