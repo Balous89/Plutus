@@ -2,6 +2,8 @@
 
 {% load widget_tweaks %}
 {% load static %}
+{% load bootstrap %}
+
 
 
 
@@ -101,11 +103,19 @@ $( "#add_transit_route" ).submit(function( event ) {
     term = $form.serialize(),
     url = $form.attr("action");
 
-  // Send the data using post
-  var posting = $.post( url,  term  );
 
-  // Put the results in a div
-  posting.done(function(data) {
+
+  var jqxhr = $.post( url,term)
+  .done(function(data) {
+    if (data['errors']){
+      var error_list = data['errors']
+      for (var error in error_list){
+        $('#id_'+ error).after('<p style=color:red>' + error_list[error] + '</p>');
+        $('#id_'+ error).next().fadeOut(5000);
+      }
+    }else
+    {
+    // alert( "second success" );
     $('#here').prepend('<tr><td>' + data.frome + '</td><td>' + 
       data.source_adress_street + '</td><td>' + 
       data.source_adress_number + '</td><td>' + 
@@ -118,13 +128,12 @@ $( "#add_transit_route" ).submit(function( event ) {
       data.endpoint_adress_district + '</td><td>' + 
       data.distance_in_km + ' km' + '</td><td>' + 
       data.paycheck_for_route + ' PLN' + '</td><td>' + 
-      data.transit_date + '</td></tr>'
-      );
-    
-       
+      data.transit_date + '</td></tr>');
+      /*$('#add_transit_route')[0].reset();*/ /*TODO UNCOMMENT THIS!*/
+    };
   });
-  /*$('#add_transit_route')[0].reset();*/ /*TODO UNCOMMENT THIS!*/
 });
+
 
  </script>
 

@@ -58,7 +58,9 @@ class GetTransitPoints(View):
                     'distance_in_km': posted_transit_points_form.distance_in_km,
                     'paycheck_for_route': posted_transit_points_form.paycheck_for_route}
         else:
-            print('FORM NOT VALID')
+            if transit_points_form.errors:
+                data = {'errors': transit_points_form.errors}
+            print(data)
 
         # return JsonResponse({'data': True, 'posted_transit_points_form.distance_in_km': posted_transit_points_form.distance_in_km})
         return JsonResponse(data)

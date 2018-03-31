@@ -3,6 +3,7 @@ from .models import TransitRouteModel
 from django.utils.translation import ugettext_lazy as _
 import datetime
 from django import forms
+import re
 
 
 class TransitRouteForm(forms.ModelForm):
@@ -30,18 +31,16 @@ class TransitRouteForm(forms.ModelForm):
         'endpoint_adress_district': _('Województwo'),
     }
 
-  # source_adress_number = models.CharField(
-  #        max_length=40, label=_('Numer'), required=False, )
-  #    # TODO: add default = request.user.default_street
-  #    source_adress_street = models.CharField(max_length=40, label=_('Ulica'))
-  #    # TODO: add default = request.user.default_city
-  #    source_adress_city = models.CharField(max_length=40, label=_('Miasto'))
-  #    # TODO: add default = request.user.default_district
-  #    source_adress_district = models.CharField(
-  #        max_length=30, choices=districts, null=True, label=_('Województwo'))
+  def clean_source_adress_number(self):
+    source_adress_number = self.cleaned_data.get('source_adress_number')
+    number_pattern = re.compile(r'^(\d{,5})([a-zA-Z]?)(/?)\d{,5}$')
+    if (bool(number_pattern.match(source_adress_number)) is False) or source_adress_number[-1] == '/':
+      raise forms.ValidationError(_('Please enter valid number'))
+    return source_adress_number
 
-  #    endpoint_adress_number = models.CharField(max_length=40, label=_('Numer'))
-  #    endpoint_adress_street = models.CharField(max_length=40, label=_('Ulica'))
-  #    endpoint_adress_city = models.CharField(max_length=40, label=_('Miasto'))
-  #    endpoint_adress_district = models.CharField(
-  #        max_length=30, choices=districts, null=True, label=_('Województwo'))
+  def clean_endpoint_adress_number(self):
+    endpoint_adress_number = self.cleaned_data.get('endpoint_adress_number')
+    number_pattern = re.compile(r'^(\d{,5})([a-zA-Z]?)(/?)\d{,5}$')
+    if (bool(number_pattern.match(endpoint_adress_number)) is False) or endpoint_adress_number[-1] == '/':
+      raise forms.ValidationError(_('Please enter valid number'))
+    return endpoint_adress_number
