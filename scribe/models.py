@@ -3,29 +3,25 @@ from scribe.includes.districts import districts
 from django.core.validators import RegexValidator
 from django.utils.translation import ugettext_lazy as _
 from django.utils import timezone
-
+from django.core.validators import RegexValidator
+from .includes.regexes import number_regex, street_regex
 import datetime
 
 
 class TransitRouteModel(models.Model):
 
-    # TODO: add default = request.user.default_no
-    source_adress_number = models.CharField(
-        max_length=40, default='59')
     # TODO: add default = request.user.default_street
-    source_adress_street = models.CharField(
-        max_length=40, default='Walecznych')
+    origin_street = models.CharField(
+        max_length=40, default='Walecznych', validators=[RegexValidator(regex=street_regex['pattern'], message=street_regex['message'])])
     # TODO: add default = request.user.default_city
-    source_adress_city = models.CharField(max_length=40, default='Klodzko')
+    origin_city = models.CharField(max_length=40, default='Klodzko')
     # TODO: add default = request.user.default_district
-    source_adress_district = models.CharField(
+    origin_district = models.CharField(
         max_length=30, choices=districts, null=True, default='districts.dol')
 
-    endpoint_adress_number = models.CharField(
-        max_length=40, null=True, blank=True, default='34')
-    endpoint_adress_street = models.CharField(max_length=40, default='Hallera')
-    endpoint_adress_city = models.CharField(max_length=40, default='Wroclaw')
-    endpoint_adress_district = models.CharField(
+    destination_street = models.CharField(max_length=40, default='Hallera', validators=[RegexValidator(regex=street_regex['pattern'], message=street_regex['message'])])
+    destination_city = models.CharField(max_length=40, default='Wroclaw')
+    destination_district = models.CharField(
         max_length=30, choices=districts, null=True, default='districts.dol')
 
     paycheck_for_route = models.DecimalField(
@@ -41,6 +37,6 @@ class TransitRouteModel(models.Model):
     transit_date = models.DateField(default=datetime.date.today)
 
     def __str__(self):
-        return self.source_adress_city + ' - ' + self.endpoint_adress_city + ' ' + self.transit_date.strftime('%d-%m-%Y')
+        return self.origin_city + ' - ' + self.destination_city + ' ' + self.transit_date.strftime('%d-%m-%Y')
 
  # TODO: add disctance field saved after get response from google maps api

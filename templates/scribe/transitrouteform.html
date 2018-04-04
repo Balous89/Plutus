@@ -42,39 +42,27 @@
 </div>
 <p></p>
 
-
-<div class="container" style="margin: 0 auto;">
+ `    
+<div class="container" style="margin: 0 auto; text-align:center; vertical-align:middle;">
   <table class="table table-striped" id='here'>
     <thead>
         <tr>
           <th></th>
-          <th>Ulica</th>
-          <th>Numer</th>
-          <th>Miasto</th>
-          <th>Wojewodztwo</th>
+          <th>Adres poczatkowy</th>
           <th></th>
-          <th>Ulica</th>
-          <th>Numer</th>
-          <th>Miasto</th>
-          <th>Wojewodztwo</th>
+          <th>Adres koncowy</th>
           <th>Odleglosc</th>
           <th>Zaplata</th>
-          <th>Data</th>        
+          <th>Data</th>
         </tr>
       </thead>
       <tbody id='tbody'>
         {% for route in all_routs %}
         <tr>
           <td>Z</td>
-          <td>{{ route.source_adress_street }}</td>
-          <td>{{ route.source_adress_number }}</td>
-          <td>{{ route.source_adress_city }}</td>
-          <td>{{ route.source_adress_district }}</td>
+          <td>{{ route.origin_street }} {{ route.origin_city }} {{ route.origin_district }}</td>
           <td>DO</td>
-          <td>{{ route.endpoint_adress_street }}</td>
-          <td>{{ route.endpoint_adress_number }}</td>
-          <td>{{ route.endpoint_adress_city }}</td>
-          <td>{{ route.endpoint_adress_district }}</td>
+          <td>{{ route.destination_street }} {{ route.destination_city }} {{ route.destination_district }}</td>
           <td>{{ route.distance_in_km }} km</td>
           <td>{{ route.paycheck_for_route }} PLN</td>
           <td>{{ route.transit_date|date:'Y-m-d' }}</td>
@@ -107,30 +95,27 @@ $( "#add_transit_route" ).submit(function( event ) {
 
   var jqxhr = $.post( url,term)
   .done(function(data) {
-    if (data['errors']){
-      var error_list = data['errors']
-      for (var error in error_list){
-        $('#id_'+ error).after('<p style=color:red>' + error_list[error] + '</p>');
-        $('#id_'+ error).next().fadeOut(5000);
-      }
-    }else
-    {
-    // alert( "second success" );
-    $('#here').prepend('<tr><td>' + data.frome + '</td><td>' + 
-      data.source_adress_street + '</td><td>' + 
-      data.source_adress_number + '</td><td>' + 
-      data.source_adress_city + '</td><td>' + 
-      data.source_adress_district + '</td><td>' +  
-      data.to + '</td><td>' + 
-      data.endpoint_adress_street + '</td><td>' +  
-      data.endpoint_adress_number + '</td><td>' + 
-      data.endpoint_adress_city + '</td><td>' +  
-      data.endpoint_adress_district + '</td><td>' + 
-      data.distance_in_km + ' km' + '</td><td>' + 
-      data.paycheck_for_route + ' PLN' + '</td><td>' + 
-      data.transit_date + '</td></tr>');
-      /*$('#add_transit_route')[0].reset();*/ /*TODO UNCOMMENT THIS!*/
-    };
+    if(data['adress_error']){
+      alert(data['adress_error']);
+    }else{
+      if (data['form_errors']){
+        var error_list = data['form_errors']
+        for (var error in error_list){
+          $('#id_'+ error).after('<p style=color:red>' + error_list[error] + '</p>');
+          $('#id_'+ error).next().fadeOut(5000);
+        }
+      }else{
+      // alert( "second success" );
+      $('#here').prepend('<tr><td>' + data.frome + '</td><td>' + 
+        data.origin_street + ' ' + data.origin_city + ' ' +  data.origin_district+ '</td><td>' + 
+        data.to + '</td><td>' + 
+        data.destination_street + ' ' + data.destination_city + ' ' + data.destination_district + '</td><td>' +  
+        data.distance_in_km + ' km' + '</td><td>' + 
+        data.paycheck_for_route + ' PLN' + '</td><td>' + 
+        data.transit_date + '</td></tr>');
+        /*$('#add_transit_route')[0].reset();*/ /*TODO UNCOMMENT THIS!*/
+      };
+    }
   });
 });
 

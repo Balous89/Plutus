@@ -3,44 +3,27 @@ from .models import TransitRouteModel
 from django.utils.translation import ugettext_lazy as _
 import datetime
 from django import forms
+from django.core.validators import RegexValidator
+from .includes.regexes import number_regex, street_regex
 import re
 
+# TODO: merge this with html input type='data'
 
 class TransitRouteForm(forms.ModelForm):
-        # TODO: merge this with html input type='data'
+  
+  origin_number = forms.CharField(max_length=40,label=_('Numer'))
+  destination_number = forms.CharField(max_length=40,label=_('Numer'))
+
   class Meta:
     model = TransitRouteModel
-    fields = ('source_adress_number', 'source_adress_street',
-              'source_adress_city', 'source_adress_district',
-              'endpoint_adress_number', 'endpoint_adress_street',
-              'endpoint_adress_city', 'endpoint_adress_district',
+    fields = ('origin_number', 'origin_street', 'origin_city', 'origin_district', 'destination_number',
+              'destination_street', 'destination_city', 'destination_district',
               )
-    widgets = {
-        'source_adress_number': forms.TextInput(attrs={'placeholder': 'To pole nie jest wymagane'}),
-        'endpoint_adress_number': forms.TextInput(
-            attrs={'placeholder': 'To pole nie jest wymagane'}),
-    }
     labels = {
-        'source_adress_number': _('Numer'),
-        'source_adress_street': _('Ulica'),
-        'source_adress_city': _('Miasto'),
-        'source_adress_district': _('Województwo'),
-        'endpoint_adress_number': _('Numer'),
-        'endpoint_adress_street': _('Ulica'),
-        'endpoint_adress_city': _('Miasto'),
-        'endpoint_adress_district': _('Województwo'),
+        'origin_street': _('Ulica'),
+        'origin_city': _('Miasto'),
+        'origin_district': _('Województwo'),
+        'destination_street': _('Ulica'),
+        'destination_city': _('Miasto'),
+        'destination_district': _('Województwo'),
     }
-
-  def clean_source_adress_number(self):
-    source_adress_number = self.cleaned_data.get('source_adress_number')
-    number_pattern = re.compile(r'^(\d{,5})([a-zA-Z]?)(/?)\d{,5}$')
-    if (bool(number_pattern.match(source_adress_number)) is False) or source_adress_number[-1] == '/':
-      raise forms.ValidationError(_('Please enter valid number'))
-    return source_adress_number
-
-  def clean_endpoint_adress_number(self):
-    endpoint_adress_number = self.cleaned_data.get('endpoint_adress_number')
-    number_pattern = re.compile(r'^(\d{,5})([a-zA-Z]?)(/?)\d{,5}$')
-    if (bool(number_pattern.match(endpoint_adress_number)) is False) or endpoint_adress_number[-1] == '/':
-      raise forms.ValidationError(_('Please enter valid number'))
-    return endpoint_adress_number
