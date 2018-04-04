@@ -21,20 +21,14 @@
         <div class ='col'>
           <h1>Poczatek trasy</h1>
             {% for field in transit_points_form|slice:":4" %}
-              <p>{{ field.label_tag }} </br>
-            {{ field }}</p>
-            {% for error in field.errors %}|
-              <p style="color: red">{{ error }}</p>
-            {% endfor %}{% endfor %}
+                {{ field|bootstrap }}
+            {% endfor %}
         </div>
         <div class ='col'>
           <h1>Cel trasy</h1>
             {% for field in transit_points_form|slice:"4:" %}
-              <p>{{ field.label_tag }} </br>
-            {{ field }}</p>
-            {% for error in field.errors %}|
-              <p style="color: red">{{ error }}</p>
-            {% endfor %}{% endfor %}
+              {{ field|bootstrap }}
+            {% endfor %}
         </div>
       <input type="submit" name="" value="Oblicz" class='btn btn-primary' id="calculate">
       </div>

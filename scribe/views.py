@@ -3,7 +3,7 @@ from django.views import View
 from django.http import JsonResponse
 from .forms import TransitRouteForm
 from .models import TransitRouteModel
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext as _
 from google_hermes.views import GetDataFromGoogleMap
 
 # Create your views here.
@@ -33,7 +33,6 @@ class GetTransitPoints(View):
                 posted_transit_points_form = transit_points_form.save(commit=False)
                 print('Numer'+ transit_points_form.cleaned_data.get('origin_number'))
                 get_data_from_google_api = GetDataFromGoogleMap()
-                    
                 posted_transit_points_form.origin_street,\
                 posted_transit_points_form.origin_city,\
                 posted_transit_points_form.destination_street,\
