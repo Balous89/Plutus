@@ -21,4 +21,5 @@ from django.conf.urls.static import static
 urlpatterns = [
     path('admin/', admin.site.urls),
     path('scribe/', include('scribe.urls', namespace='scribe')),
+    path('', include('user_login_register_app.urls', namespace='user_login_register')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)
