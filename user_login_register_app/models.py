@@ -3,9 +3,11 @@ from django.db import models
 from django.core.mail import send_mail
 from django.contrib.auth.models import PermissionsMixin
 from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
-from django.utils.translation import ugettext_lazy as lazy_text
+from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+import re
+
 #from django.conf import settings
 
 #User = settings.AUTH_USER_MODEL
@@ -17,9 +19,9 @@ class UserManager(BaseUserManager):
 
     def create_user(self,email, username, password=None, is_staff=False, is_superuser=False, is_active=True):
         if not email:
-            raise ValueError('Email is required')
+            raise ValueError(_('Email is required'))
         if not password:
-            raise ValueError('Password is required')
+            raise ValueError(_('Password is required'))
         
         user_obj = self.model(email=self.normalize_email(email))
         user_obj.username = username
@@ -87,6 +89,19 @@ class User(AbstractBaseUser):
 class Profile (models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False)
+    _user_pln_per_km = models.DecimalField(db_column="user_pln_per_km", 
+                                            max_digits=5, decimal_places=3,)
+
+
+    @property
+    def user_pln_per_km(self):
+        return self._user_pln_per_km
+
+    @user_pln_per_km.setter
+    def user_pln_per_km(self,value):
+        if value <= 0:
+            raise ValueError(_('Value have to be grater than 0 and have to be rounded up to two decimal places '))
+        return round(value,3)
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):

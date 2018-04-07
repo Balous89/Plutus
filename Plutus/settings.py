@@ -117,8 +117,8 @@ AUTH_PASSWORD_VALIDATORS = [
 ]
 
 
-#EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #NOTE: email printed in console for testing!!
-EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend' #NOTE: email printed in console for testing!!
+# EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 EMAIL_HOST = 'localhost'
 EMAIL_PORT = 25
 EMAIL_HOST_USER = ''
@@ -130,10 +130,9 @@ DEFAULT_FROM_EMAIL = 'Server <balous@infosecremedy.com>'
 # Internationalization
 # https://docs.djangoproject.com/en/2.0/topics/i18n/
 
-LANGUAGE_CODE = 'en-us'
+LANGUAGE_CODE = 'pl'
 DATETIME_FORMAT = '%d-%m-%Y'
 TIME_ZONE = 'UTC'
-
 USE_I18N = True
 
 USE_L10N = True

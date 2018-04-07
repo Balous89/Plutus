@@ -4,13 +4,17 @@ from django.http import JsonResponse
 from .forms import TransitRouteForm
 from .models import TransitRouteModel
 from django.utils.translation import ugettext as _
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
 from google_hermes.views import GetDataFromGoogleMap
+
 
 # Create your views here.
 
 
 class GetTransitPoints(View):
 
+    @method_decorator(login_required)
     def get(self, request):
 
         transit_points_form = TransitRouteForm()
@@ -23,7 +27,7 @@ class GetTransitPoints(View):
                    }
         return render(request, 'scribe/transitrouteform.html',
                       context)
-
+    @method_decorator(login_required)    
     def post(self, request):
 
         transit_points_form = TransitRouteForm(request.POST)
