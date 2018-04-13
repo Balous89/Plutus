@@ -1,9 +1,7 @@
 from django.utils.translation import ugettext_lazy as _
 
-# number_regex = {
-#     'pattern': '^(\d{,5})([a-zA-Z]?)(/?)\d{,5}[^/]$', 'message': _('Pole zawiera niedozwolone znaki.')}
 forbidden_chars_regex = {
-    'pattern': '^[^<>\'!@`~\"]+$', 'message': _('Pole zawiera niedozwolone znaki.')}
+    'pattern': '^[^<>\'!@`~\"]+$', 'message': _('Field contains illegal characters.')}
 
-pattern = forbidden_chars_regex['pattern']
-message = forbidden_chars_regex['message']
+forbidden_chars_pattern = forbidden_chars_regex['pattern']
+forbidden_chars_message = forbidden_chars_regex['message']

@@ -6,15 +6,13 @@ from django.contrib.auth.base_user import AbstractBaseUser, BaseUserManager
 from django.utils.translation import ugettext_lazy as _
 from django.db.models.signals import post_save
 from django.dispatch import receiver
+from django.core.validators import MinValueValidator
+from scribe.includes.districts import districts
+import datetime
+
 import re
 
-#from django.conf import settings
 
-#User = settings.AUTH_USER_MODEL
-
-
-
-# Create your models here.
 class UserManager(BaseUserManager):
 
     def create_user(self,email, username, password=None, is_staff=False, is_superuser=False, is_active=True):
@@ -89,22 +87,26 @@ class User(AbstractBaseUser):
 class Profile (models.Model):
     user = models.OneToOneField(User, on_delete=models.CASCADE)
     email_confirmed = models.BooleanField(default=False)
+    user_cretion_date = models.DateTimeField(default=datetime.date.today, editable=False)
     _user_pln_per_km = models.DecimalField(db_column="user_pln_per_km", 
-                                            max_digits=5, decimal_places=3,)
-
-
+                                            max_digits=5, decimal_places=2, 
+                                            blank=True, null=True,
+                                            validators=[MinValueValidator(0.01)])
+    
     @property
     def user_pln_per_km(self):
         return self._user_pln_per_km
 
     @user_pln_per_km.setter
-    def user_pln_per_km(self,value):
-        if value <= 0:
-            raise ValueError(_('Value have to be grater than 0 and have to be rounded up to two decimal places '))
-        return round(value,3)
+    def user_pln_per_km(self, value):
+        self._user_pln_per_km = round(value, 2)
+
+    def __str__(self):
+        return self.user.email
 
 @receiver(post_save, sender=User)
 def update_user_profile(sender, instance, created, **kwargs):
     if created:
         Profile.objects.create(user=instance)
     instance.profile.save()
+

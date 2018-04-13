@@ -3,11 +3,10 @@ from .models import TransitRouteModel
 from django.utils.translation import ugettext_lazy as _
 import datetime
 from django import forms
-from django.core.validators import RegexValidator
-from .includes.regexes import forbidden_chars_regex
-import re
+import datetime
 
 # TODO: merge this with html input type='data'
+
 
 class TransitRouteForm(forms.ModelForm):
   
@@ -29,3 +28,13 @@ class TransitRouteForm(forms.ModelForm):
         'destination_city': _('Miasto'),
         'destination_district': _('Województwo'),
     }
+
+class DateFilterForm(forms.Form):
+  today = datetime.date.today().strftime('%Y-%m-%d')
+
+  date_from = forms.DateField(widget=forms.widgets.DateInput(format="%Y-%m-%d"),
+                              error_messages={'invalid':_('Wprowadź datę w formacie ' + today)},
+                              label=_('Data od:'))
+  date_to = forms.DateField(widget=forms.widgets.DateInput(format="%Y-%m-%d"),
+                            error_messages={'invalid':_('Wprowadź datę w formacie ' + today)},
+                            label=_('Data do:'))

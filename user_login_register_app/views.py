@@ -14,7 +14,6 @@ from django.contrib.auth import get_user_model
 
 
 User = get_user_model()
-
 # Create your views here.
 def signup(request):
     if request.method == 'POST':
@@ -59,6 +58,7 @@ def activate(request, uidb64, token):
         user.profile.email_confirmed = True
         user.save()
         login(request, user)
-        return redirect('photos:home')
+        return redirect('user_login_register_app:login')
     else:
         return render(request, 'user_login_register_app/account_activation_invalid.html')
+

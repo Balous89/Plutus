@@ -30,12 +30,33 @@
               {{ field|bootstrap }}
             {% endfor %}
         </div>
-      <input type="submit" name="" value="Oblicz" class='btn btn-primary' id="calculate">
+      <input type="submit" name="add_transit_route_submit" value="Oblicz" class='btn btn-primary' id="calculate">
       </div>
+  </form>
+  <form method="POST" id='date_filter_form' action=''>
+    {% csrf_token %}
+    {% for field in date_form %}
+      {{field.label}} {{ field }}
+    {% endfor %}
+      {% if date_form.errors %}
+        {% for field in date_form %}
+          {% for error in field.errors %}
+            <div class="alert alert-danger">
+              <strong>{{ error|escape }}</strong>
+            </div>
+          {% endfor %}
+        {% endfor %}
+        {% for error in date_form.non_field_errors %}
+          <div class="alert alert-danger">
+              <strong>{{ error|escape }}</strong>
+          </div>
+        {% endfor %}
+      {% endif %}
+  
+    <input type="submit" name="date_filter_form_submit" value="Filtruj" class='btn btn-primary' id="filter">
   </form>
 </div>
 <p></p>
-
  `    
 <div class="container" style="margin: 0 auto; text-align:center; vertical-align:middle;">
   <table class="table table-striped" id='here'>
@@ -65,9 +86,6 @@
       </tbody>
     </table>
 </div>
-
-
-
 
 {% endblock %}
 

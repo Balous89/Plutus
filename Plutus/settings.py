@@ -93,6 +93,7 @@ DATABASES = {
 # Password validation
 # https://docs.djangoproject.com/en/2.0/ref/settings/#auth-password-validators
 AUTH_USER_MODEL = 'user_login_register_app.User'
+AUTH_PROFILE_MODULE = 'user_login_register_app.Profile'
 PASSWORD_HASHERS = [
     'django.contrib.auth.hashers.BCryptSHA256PasswordHasher',
     'django.contrib.auth.hashers.BCryptPasswordHasher',
