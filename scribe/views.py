@@ -9,16 +9,19 @@ from django.utils.decorators import method_decorator
 from google_hermes.views import GetDataFromGoogleMap
 
 class GetTransitPoints(View):
-
+ 
     @method_decorator(login_required)
     def get(self, request):
 
         transit_points_form = TransitRouteForm()
         date_form = DateFilterForm()
         all_routs = TransitRouteModel.objects.filter(user_instance=request.user).order_by('-transit_date')
+        sum_of_paycheck = sum(rout.get_paycheck_for_route() for rout in all_routs)
+        print(sum_of_paycheck)
         context = {'transit_points_form': list(transit_points_form),
                    'all_routs': all_routs,
                    'date_form': date_form,
+                   'sum_of_paycheck':sum_of_paycheck,
                    }
         return render(request, 'scribe/transitrouteform.html',
                       context)
@@ -36,10 +39,12 @@ class GetTransitPoints(View):
                                                                         transit_date__range=[date_from,date_to])\
                                                                     .order_by('-transit_date')
                     transit_points_form = TransitRouteForm()
-                    date_form = DateFilterForm()                
+                    date_form = DateFilterForm()
+                    sum_of_paycheck = sum(rout.get_paycheck_for_route() for rout in filtered_routs)  
                     context = {'transit_points_form': list(transit_points_form),
                        'all_routs': filtered_routs,
                        'date_form': date_form,
+                       'sum_of_paycheck':sum_of_paycheck,
                        }
                     return render(request, 'scribe/transitrouteform.html',
                           context)
@@ -49,10 +54,12 @@ class GetTransitPoints(View):
                         all_routs = TransitRouteModel.objects.filter(user_instance=request.user)\
                                                                 .order_by('-transit_date')
                         transit_points_form = TransitRouteForm()
-                        
+                        sum_of_paycheck = sum(rout.get_paycheck_for_route() for rout in filtered_routs)
                         context = {'transit_points_form': list(transit_points_form),
                        'all_routs': all_routs,
                        'date_form': date_form,
+                       'sum_of_paycheck':sum_of_paycheck,
+                       
                        }
                     return render(request, 'scribe/transitrouteform.html',
                       context)

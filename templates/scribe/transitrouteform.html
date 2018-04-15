@@ -83,6 +83,12 @@
           <td>{{ route.transit_date|date:'Y-m-d' }}</td>
         </tr>
         {% endfor %}
+        <tr>
+          <td colspan="5"><strong>Zarobionych pieniedzy w sumie:</strong></td>
+          
+          <td id='sum_of_paycheck_cell'><strong>{{sum_of_paycheck}} PLN</strong></td>
+          <td></td>
+        </tr>
       </tbody>
     </table>
 </div>
@@ -117,7 +123,10 @@ $( "#add_transit_route" ).submit(function( event ) {
           $('#id_'+ error).next().fadeOut(5000);
         }
       }else{
-      // alert( "second success" );
+  
+      var sum_of_paycheck_cell=($('#sum_of_paycheck_cell').text().split(" ")[0]);
+      var updated_sum_of_paycheck_cell = parseFloat(sum_of_paycheck_cell) + data.paycheck_for_route;
+     
       $('#here').prepend('<tr><td>' + data.frome + '</td><td>' + 
         data.origin_street + ' ' + data.origin_city + ' ' +  data.origin_district+ '</td><td>' + 
         data.to + '</td><td>' + 
@@ -125,6 +134,8 @@ $( "#add_transit_route" ).submit(function( event ) {
         data.distance_in_km + ' km' + '</td><td>' + 
         data.paycheck_for_route + ' PLN' + '</td><td>' + 
         data.transit_date + '</td></tr>');
+      
+      $('#sum_of_paycheck_cell').replaceWith('<td id="sum_of_paycheck_cell"><strong>' + updated_sum_of_paycheck_cell.toFixed(2) + ' PLN</strong></td>');
         /*$('#add_transit_route')[0].reset();*/ /*TODO UNCOMMENT THIS!*/
       };
     }

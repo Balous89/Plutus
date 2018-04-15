@@ -10,7 +10,6 @@ from django.contrib.auth import get_user_model
 
 import datetime
 
-
 User = get_user_model()
 
 
@@ -64,5 +63,8 @@ class TransitRouteModel(models.Model):
 
     def __str__(self):
         return self.origin_city + ' - ' + self.destination_city + ' ' + self.transit_date.strftime('%d-%m-%Y')
+
+    def get_paycheck_for_route(self):
+        return self.paycheck_for_route
 
  # TODO: add disctance field saved after get response from google maps api
