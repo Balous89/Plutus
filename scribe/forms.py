@@ -34,7 +34,7 @@ class DateFilterForm(forms.Form):
 
   date_from = forms.DateField(widget=forms.widgets.DateInput(format="%Y-%m-%d"),
                               error_messages={'invalid':_('Wprowadź datę w formacie ' + today)},
-                              label=_('Data od:'))
+                              label=_('Data od: '))
   date_to = forms.DateField(widget=forms.widgets.DateInput(format="%Y-%m-%d"),
                             error_messages={'invalid':_('Wprowadź datę w formacie ' + today)},
-                            label=_('Data do:'))
+                            label=_(' Data do: '))

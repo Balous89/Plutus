@@ -11,7 +11,8 @@ from django.contrib.auth import get_user_model
 import datetime
 
 User = get_user_model()
-
+#user = User.objects.get(id=user_id)
+#self.fields['first_name'].initial = self.instance.user.first_name
 
 class TransitRouteModel(models.Model):
 

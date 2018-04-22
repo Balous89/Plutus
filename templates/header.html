@@ -17,11 +17,11 @@
     </ul>
     <ul class="nav navbar-nav ml-auto">
     {% if request.user.is_authenticated %}
-          <li class="nav-item"><a class="nav-link" href='#' class="disabled"><i class="fas fa-user"></i> Logged as: {{ user.get_full_name }}</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'user_login_register_app:logout' %}"><i class="fas fa-sign-out-alt"></i> Logout</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'user_login_register_app:profile' %}" class="disabled"><i class="fas fa-user"></i> Zalogowany jako: {{ user.get_username }}</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'user_login_register_app:logout' %}"><i class="fas fa-sign-out-alt"></i> Wyloguj</a></li>
           {% else %}
-          <li class="nav-item"><a class="nav-link" href="{% url 'user_login_register_app:signup' %}"><i class="fas fa-user"></i> Sign Up</a></li>
-          <li class="nav-item"><a class="nav-link" href="{% url 'user_login_register_app:login' %}"><i class="fas fa-sign-in-alt"></i> Login</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'user_login_register_app:signup' %}"><i class="fas fa-user"></i> Rejestracja</a></li>
+          <li class="nav-item"><a class="nav-link" href="{% url 'user_login_register_app:login' %}"><i class="fas fa-sign-in-alt"></i> Zaloguj</a></li>
           </li>
           {% endif %}
     </ul>

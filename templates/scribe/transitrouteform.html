@@ -33,7 +33,8 @@
       <input type="submit" name="add_transit_route_submit" value="Oblicz" class='btn btn-primary' id="calculate">
       </div>
   </form>
-  <form method="POST" id='date_filter_form' action=''>
+  
+  <form method="POST" id='date_filter_form' action='' class="form-inline">
     {% csrf_token %}
     {% for field in date_form %}
       {{field.label}} {{ field }}

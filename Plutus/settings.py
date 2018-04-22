@@ -150,5 +150,5 @@ STATIC_ROOT = os.path.join(BASE_DIR, 'staticfiles')
 MEDIA_URL = '/media/'
 MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = 'user_login_register_app:login'
-#LOGIN_REDIRECT_URL = ''
+LOGIN_REDIRECT_URL = 'scribe:transitrouteform'
 #LOGOUT_REDIRECT_URL = ''

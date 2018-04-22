@@ -12,6 +12,8 @@ urlpatterns = [
     path('login/', auth_views.login, {'template_name': 'user_login_register_app/login.html'}, name='login'),
     path('logout/', auth_views.logout, {'template_name': 'user_login_register_app/logged_out.html'}, name='logout'),
     path('account_activation_sent/', TemplateView.as_view(template_name='user_login_register_app/account_activation_sent.html'), name='account_activation_sent'),
+    path('profile/',views.UserProfileView.as_view(), name='profile'),
     re_path(r'^activate/(?P<uidb64>[0-9A-Za-z_\-]+)/(?P<token>[0-9A-Za-z]{1,13}-[0-9A-Za-z]{1,20})/$',
         views.activate, name='activate'),
 ]
+ 

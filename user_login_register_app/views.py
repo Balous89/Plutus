@@ -11,6 +11,10 @@ from django.utils.http import urlsafe_base64_decode
 from django.template.loader import render_to_string
 from django.core.mail import send_mail
 from django.contrib.auth import get_user_model
+from django.contrib.auth.decorators import login_required
+from django.utils.decorators import method_decorator
+from django.views import View
+from .forms import UserProfileForm
 
 
 User = get_user_model()
@@ -48,7 +52,6 @@ def signup(request):
 def activate(request, uidb64, token):
     try:
         uid = force_text(urlsafe_base64_decode(uidb64))
-        print('HERE!!!!!!!!!: '+uid)
         user = User.objects.get(pk=uid)
     except (TypeError, ValueError, OverflowError, User.DoesNotExist):
         user = None
@@ -62,3 +65,26 @@ def activate(request, uidb64, token):
     else:
         return render(request, 'user_login_register_app/account_activation_invalid.html')
 
+
+
+class UserProfileView(View):
+
+
+    def get(self,request):
+        if request.user.is_authenticated:
+            user = request.user
+            pln_per_km_form = UserProfileForm()
+            return render(request,'user_login_register_app/profile.html',{'user':request.user,'pln_per_km_form':pln_per_km_form})
+        #else:
+        return redirect('user_login_register_app:login')
+    def post(self,request):
+        if request.user.is_authenticated:
+            pln_per_km_form = UserProfileForm(request.POST)
+            if request.method == 'POST':
+                if pln_per_km_form.is_valid():
+                    request.user.profile.user_pln_per_km = pln_per_km_form.cleaned_data['_user_pln_per_km']
+                    request.user.profile.save()
+                    return render(request,'user_login_register_app/profile.html',{'user':request.user,'pln_per_km_form':pln_per_km_form})
+        return redirect('user_login_register_app:login')
+
+         

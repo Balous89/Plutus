@@ -68,7 +68,7 @@ class GetTransitPoints(View):
                     'Entered address is invalid. Please check your data.')}
                 print('Error' + str(e))
                 return JsonResponse(data)    
-            
+             
         else:
             
             transit_points_form = TransitRouteForm(request.POST)
@@ -76,6 +76,7 @@ class GetTransitPoints(View):
                 if transit_points_form.is_valid():
                     print('is valid')
                     posted_transit_points_form = transit_points_form.save(commit=False)
+                    posted_transit_points_form.user_instance = request.user
                     print('Numer'+ transit_points_form.cleaned_data.get('origin_number'))
                     get_data_from_google_api = GetDataFromGoogleMap()
                     posted_transit_points_form.origin_street,\
@@ -93,8 +94,8 @@ class GetTransitPoints(View):
                                                                 posted_transit_points_form.destination_district)
                     
 
-                    posted_transit_points_form.paycheck_for_route = round((posted_transit_points_form.distance_in_km *\
-                                                                            float(request.user.profile._user_pln_per_km)),2)               
+                    posted_transit_points_form.paycheck_for_route = round(posted_transit_points_form.distance_in_km *\
+                                                                            float(request.user.profile._user_pln_per_km),2)           
                     posted_transit_points_form.save()
                     
 

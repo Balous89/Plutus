@@ -13,23 +13,16 @@ class SignUpForm(UserCreationForm):
         labels = {'username': _('Nazwa użytkownika'),'password1': _('Haslo'),'password2': _('Potwierdź hasło'),}
 
 
+class UserProfileForm(forms.ModelForm):
+
+	class Meta:
+		model = Profile
+		fields = ('_user_pln_per_km',)
+		labels = {'_user_pln_per_km':_('Zapłata za przejechant kilometr w PLN')}
 
 
 
 
 
-# def __init__(self, *args, **kwargs):
-# 	super(SignUpForm, self).__init__(*args, **kwargs)
 
-# 	# self.fields['email'].label = _('Adres email')
-# 	#self.fields['password1'].label = _('Hasło')
-# 	self.fields['password2'].label = _('Potwierdź hasło')
 
-# 	    # self.fields['password1'].widget.attrs['class'] = 'form-control'
-# 	    # self.fields['password2'].widget.attrs['class'] = 'form-control'
-
-# class EditProfileForm(UserChangeForm):
-
-# 	class Meta:
-# 		model=Profile
-# 		fields = 
