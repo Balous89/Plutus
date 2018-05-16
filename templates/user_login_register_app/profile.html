@@ -1,0 +1,21 @@
+{% extends "scribe/base.html"%}
+{% load bootstrap %} 
+{% block title %}Twoj profil{% endblock %}
+
+{% block content %}
+
+<h1>Profil</h1>
+<div class="container" style="margin: 0 auto;">
+  {{ user.get_username }}
+  {{ user.get_full_name }}
+  
+  <form method="POST">
+      {% csrf_token %}
+    
+        {{pln_per_km_form.as_p}}
+        
+    
+      <input type="submit" name="" value="Zapisz" class='btn btn-primary'>
+  </form>
+</div>
+{% endblock %}
