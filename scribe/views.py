@@ -6,6 +6,7 @@ from .models import TransitRouteModel
 from django.utils.translation import ugettext as _
 from django.contrib.auth.decorators import login_required
 from django.utils.decorators import method_decorator
+from django.urls import reverse_lazy
 from google_hermes.views import GetDataFromGoogleMap
 
 class GetTransitPoints(View):
@@ -122,3 +123,7 @@ class GetTransitPoints(View):
                 print('Error' + str(e))
 
             return JsonResponse(data)
+
+
+def home_page(request):
+    return render(request,'scribe/home.html')

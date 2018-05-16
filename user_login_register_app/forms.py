@@ -18,7 +18,7 @@ class UserProfileForm(forms.ModelForm):
 	class Meta:
 		model = Profile
 		fields = ('_user_pln_per_km',)
-		labels = {'_user_pln_per_km':_('Zapłata za przejechant kilometr w PLN')}
+		labels = {'_user_pln_per_km':_('Stawka za przejechany kilometr w PLN')}
 
 
 

@@ -17,9 +17,14 @@ from django.contrib import admin
 from django.urls import path, include
 from django.conf import settings
 from django.conf.urls.static import static
+from scribe.views import home_page
+
+
+
 
 urlpatterns = [
     path('admin/', admin.site.urls),
-    path('scribe/', include('scribe.urls', namespace='scribe')),
+    path('', include('scribe.urls', namespace='scribe')),
+    path('', home_page, name='home_page'),
     path('', include('user_login_register_app.urls', namespace='user_login_register')),
 ] + static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

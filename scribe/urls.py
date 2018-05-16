@@ -5,6 +5,6 @@ app_name = 'scribe'
 
 
 urlpatterns = [
-    path('transitrouteform/', views.GetTransitPoints.as_view(),
+    path('notatnik/', views.GetTransitPoints.as_view(),
          name='transitrouteform'),
 ]
