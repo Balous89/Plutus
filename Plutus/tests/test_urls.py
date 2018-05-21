@@ -10,7 +10,7 @@ import pytest
 
 User = get_user_model()
 
-
+ 
 
 class TestUrls:
 
@@ -20,11 +20,12 @@ class TestUrls:
 		('user_login_register_app:login','<title>Login</title>'),
 		('user_login_register_app:logout','<title>Do zobaczenia!</title>'),
 		])
+	@pytest.mark.django_db
 	def test_login_unrequire_pages(self,url_name,html_content):
 		self.client = Client()
 		request = self.client.get(reverse(url_name))
 		response = str(request.getvalue()).replace('\\n','')
-		print(response)
+		
 		assert html_content in response
 		assert request.status_code == 200
 	
@@ -57,5 +58,4 @@ class TestUrls:
  
   
 
- 
-   
+    

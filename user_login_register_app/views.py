@@ -16,34 +16,29 @@ from django.utils.decorators import method_decorator
 from django.views import View
 from .forms import UserProfileForm
 
-
+ 
 User = get_user_model()
 # Create your views here.
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
+        print(form['email'])
         if form.is_valid():
             user = form.save(commit=False)
             user.active = False
+            user.email = form.cleaned_data.get('email') 
             user.save()
+           
             current_site = get_current_site(request)
             subject = 'Activate Yours ForrestofSorrows Account'
-            message = render_to_string('user_login_register_app/account_activation_email.html',{
+            message_context = {
                 'user':user,
                 'domain':current_site.domain,
                 'uid': urlsafe_base64_encode(force_bytes(user.pk)).decode(),
-                'token': account_activation_token.make_token(user)})
+                'token': account_activation_token.make_token(user)}
+            message = render_to_string('user_login_register_app/account_activation_email.html',message_context)
             send_mail(subject,message,'registration@infosecremedy.com',[user.email],)
             return redirect('user_login_register_app:account_activation_sent')
-
-
-
-            # email = form.cleaned_data.get('email')
-            # username = form.cleaned_data.get('username')
-            # password = form.cleaned_data.get('password1')
-            # user = authenticate(email=email,password=password)
-            # login(request,user)
-            # return redirect('photos:home')
     else:
         form = SignUpForm()
     return render(request,'user_login_register_app/signup.html',{'form':form},)
@@ -64,7 +59,6 @@ def activate(request, uidb64, token):
         return redirect('user_login_register_app:login')
     else:
         return render(request, 'user_login_register_app/account_activation_invalid.html')
-
 
 
 class UserProfileView(View):

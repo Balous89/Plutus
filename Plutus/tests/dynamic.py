@@ -1,26 +1,41 @@
-import django
+
+    @pytest.mark.django_db
+    def test_signup(self):
+        self.client = Client()
+        resquest = self.client.post(reverse('user_login_register_app:signup'), data={
+                                    'email': 'testuser@gmail.com', 'password1': 'bumerang', 'password2': 'bumerang', 'username': 'testuser'})
+
+        user = User.objects.get(username='testuser')
+
+        assert user.email == 'testuser@gmail.com'
+        assert user.username == 'testuser'
+        assert user.active == False
+        assert user.staff == False
+        assert user.admin == False
 
 
-from django.http import HttpRequest
-from scribe.views import home_page
+    
+@pytest.mark.django_db
+    def test_send_email(self,request):
+        # success_mail = send_mail('Subject', 'Message', 'mail_from@infosecremedy.com', ['usermail@infosecremedy.com'])
+        # assert success_mail == True
+ 
+        self.client = Client()
+        self.request = self.client.post(reverse('user_login_register_app:signup'), data={
+                                    'email': 'testuser@gmail.com', 'password1': 'bumerang', 'password2': 'bumerang', 'username': 'testuser'})
+        self.current_site = Site.objects.get_current()
+        # current_site.domain
+        # self.request.get_host()
+        self.user = User.objects.get(username='testuser')
+        message_context = {
+                'user': self.user,
+                'domain': self.current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(self.user.pk)).decode(),
+                'token': account_activation_token.make_token(self.user)}
+
+        assert len(mail.outbox) == 1
+        generated_link = 'http://{}/activate/{}/{}/'.format(message_context['domain'], message_context['uid'], message_context['token'])
 
 
-
-request = HttpRequest()
-response = home_page(request)
-html = response.getvalue()
-print(type(html))
-
-
-
-google_api_key = 'AIzaSyDv16-NlXtPD2pgTyT6xGO3WbOV1bwOWTE'
-            url = 'https://maps.googleapis.com/maps/api/distancematrix/json?origins=38,Osiedle Bolesława Śmiałego,Poznań,&destinations=9,Petuniowa,Wrocław,Dolnośląskie&key=AIzaSyDv16-NlXtPD2pgTyT6xGO3WbOV1bwOWTE'
-
-
-Petuniowa 9 53-238 Wrocław Dolnośląskie
-
-Osiedle Bolesława Śmiałego 38 Poznań Wielkopolskie
-            + \
-                source_no + ',' + source_street + ',' + source_city + ',' + \
-                source_district + '&destinations=' + end_no + ',' + end_street + ',' + end_city + \
-                ',' + end_district + '&key=AIzaSyDv16-NlXtPD2pgTyT6xGO3WbOV1bwOWTE
+        assert mail.outbox[0].subject == 'Activate Yours ForrestofSorrows Account'
+        assert generated_link in mail.outbox[0].body
