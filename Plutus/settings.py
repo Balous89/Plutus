@@ -27,7 +27,7 @@ SECRET_KEY = '@5b=&&t_c)!6ul!pcc+ik7c3@*w57idh1d-#nmzo1#$2@sq^**'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['testserver','127.0.0.1','infosecremedy.com']
+ALLOWED_HOSTS = ['127.0.0.1']
 
 
 # Application definition
@@ -153,4 +153,4 @@ MEDIA_ROOT = os.path.join(BASE_DIR, 'media')
 LOGIN_URL = 'user_login_register_app:login'
 LOGIN_REDIRECT_URL = 'scribe:transitrouteform'
 #LOGOUT_REDIRECT_URL = ''
-SITE_ID = 1
+SITE_ID = 2

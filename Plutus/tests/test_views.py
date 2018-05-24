@@ -22,15 +22,9 @@ from asyncio.transports import BaseTransport
 
 from django.contrib.sites.models import Site
 
-
-
-
 User = get_user_model()
 
-
 class TestGetDataFromGoogleMap:
-
-    #body = '{"destination_addresses" : [ "Petuniowa 9, 53-238 Wrocław, Poland" ],"origin_addresses" : [ "Osiedle Bolesława Śmiałego 38, Poznań, Poland" ],"rows" : [{"elements" : [{"distance" : {"text" : "184 km","value" : 184415},"duration" : {"text" : "2 hours 33 mins","value" : 9198},"status" : "OK"}]}],"status" : "OK" }'
 
     def test_make_request(self):
         request_klass = GetDataFromGoogleMap()
@@ -50,57 +44,50 @@ class TestGetDataFromGoogleMap:
 
 class TestSignUp:
 
+    @classmethod
+    def setup(cls):
+        cls.client = Client()
+        cls.req = cls.client.post(reverse('user_login_register_app:signup'), data={
+                                    'email': 'testuser@gmail.com', 'password1': 'bumerang',
+                                    'password2': 'bumerang', 'username': 'testuser'})
+        cls.user = User.objects.get(username='testuser')
+        cls.current_site = Site.objects.get_current()
+        cls.message_context = {
+                'user': cls.user,
+                'domain': cls.current_site.domain,
+                'uid': urlsafe_base64_encode(force_bytes(cls.user.pk)).decode(),
+                'token': account_activation_token.make_token(cls.user)}
+        cls.generated_activ_link = 'http://{}/activate/{}/{}/'.format(cls.message_context['domain'], cls.message_context['uid'], cls.message_context['token'])
+        return cls.user, cls.generated_activ_link
+
+
+    @pytest.mark.parametrize('user_model_attribute,signup_user_attribute', [
+        ('self.user.email', 'testuser@gmail.com'),
+        ('self.user.username', 'testuser'),
+        ('self.user.active', False),
+        ('self.user.staff', False),
+        ('self.user.admin', False),
+        ])
     @pytest.mark.django_db
-    def test_signup(self):
-        self.client = Client()
-        resquest = self.client.post(reverse('user_login_register_app:signup'), data={
-                                    'email': 'testuser@gmail.com', 'password1': 'bumerang', 'password2': 'bumerang', 'username': 'testuser'})
-
-        user = User.objects.get(username='testuser')
-
-        assert user.email == 'testuser@gmail.com'
-        assert user.username == 'testuser'
-        assert user.active == False
-        assert user.staff == False
-        assert user.admin == False
-
-    @pytest.mark.django_db
-    def test_signup(self):
-        self.client = Client()
-        resquest = self.client.post(reverse('user_login_register_app:signup'), data={
-                                    'email': 'testuser@gmail.com', 'password1': 'bumerang', 'password2': 'bumerang', 'username': 'testuser'})
-
-        user = User.objects.get(username='testuser')
-
-        assert user.email == 'testuser@gmail.com'
-        assert user.username == 'testuser'
-        assert user.active == False
-        assert user.staff == False
-        assert user.admin == False
-
-
-
-    @pytest.mark.django_db
-    def test_send_email(self,request):
-        self.client = Client()
-        self.request = self.client.post(reverse('user_login_register_app:signup'), data={
-                                    'email': 'testuser@gmail.com', 'password1': 'bumerang', 'password2': 'bumerang', 'username': 'testuser'})
-        self.current_site = Site.objects.get_current()
+    def test_signed_up_user_attributes(self, user_model_attribute, signup_user_attribute):
+        assert eval(user_model_attribute) == signup_user_attribute
       
-        self.user = User.objects.get(username='testuser')
-        message_context = {
-                'user': self.user,
-                'domain': self.current_site.domain,
-                'uid': urlsafe_base64_encode(force_bytes(self.user.pk)).decode(),
-                'token': account_activation_token.make_token(self.user)}
-
+    @pytest.mark.django_db
+    def test_send_activation_email(self):
         assert len(mail.outbox) == 1
-        generated_link = 'http://{}/activate/{}/{}/'.format(message_context['domain'], message_context['uid'], message_context['token'])
-        assert generated_link in mail.outbox[0].body
+       
+    @pytest.mark.django_db
+    def test_activation_email_contain_correct_activ_link(self):
+        assert self.generated_activ_link in mail.outbox[0].body
 
+    @pytest.mark.django_db
     def test_signup_get(self):
-        self.client = Client()
         request = self.client.get(reverse('user_login_register_app:signup'))
         assert request.status_code == 200
 
+    # @pytest.mark.django_db
     # def test_activate(self):
+    #     print(self.generated_activ_link)
+    #     print(self.message_context['domain'])
+    #     self.client.get(self.generated_activ_link)
+    #     assert self.user.active == True
