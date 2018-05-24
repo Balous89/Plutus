@@ -19,8 +19,10 @@ from django.utils.http import urlsafe_base64_encode
 from django.utils.http import urlsafe_base64_decode
 from user_login_register_app.tokens import account_activation_token
 from asyncio.transports import BaseTransport
-
+from user_login_register_app.views import activate
+from user_login_register_app.tokens import account_activation_token
 from django.contrib.sites.models import Site
+
 
 User = get_user_model()
 
@@ -85,9 +87,12 @@ class TestSignUp:
         request = self.client.get(reverse('user_login_register_app:signup'))
         assert request.status_code == 200
 
-    # @pytest.mark.django_db
-    # def test_activate(self):
-    #     print(self.generated_activ_link)
-    #     print(self.message_context['domain'])
-    #     self.client.get(self.generated_activ_link)
-    #     assert self.user.active == True
+    @pytest.mark.django_db
+    def test_activate(self):
+        assert self.user != None
+        assert account_activation_token.check_token(self.user, self.message_context['token']) == True
+
+
+
+
+ 

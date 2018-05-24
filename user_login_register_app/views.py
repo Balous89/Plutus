@@ -52,11 +52,16 @@ def activate(request, uidb64, token):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
+        print('USER:',user.username)
+        print('TOKEN CORRECT:',bool(account_activation_token.check_token(user, token)))
         user.active = True
+        print('ACTIVE')
         user.profile.email_confirmed = True
+        print('CONFIRMED')
         user.save()
+        print('SAVED')
         login(request, user)
-        return redirect('user_login_register_app:login')
+        return redirect('user_login_register_app:profile')
     else:
         return render(request, 'user_login_register_app/account_activation_invalid.html')
 
