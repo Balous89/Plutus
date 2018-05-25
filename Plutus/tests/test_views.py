@@ -60,7 +60,7 @@ class TestSignUp:
                 'uid': urlsafe_base64_encode(force_bytes(cls.user.pk)).decode(),
                 'token': account_activation_token.make_token(cls.user)}
         cls.generated_activ_link = 'http://{}/activate/{}/{}/'.format(cls.message_context['domain'], cls.message_context['uid'], cls.message_context['token'])
-        return cls.user, cls.generated_activ_link
+        return cls.user, cls.generated_activ_link, 
 
 
     @pytest.mark.parametrize('user_model_attribute,signup_user_attribute', [
@@ -89,10 +89,20 @@ class TestSignUp:
 
     @pytest.mark.django_db
     def test_activate(self):
-        assert self.user != None
-        assert account_activation_token.check_token(self.user, self.message_context['token']) == True
+        response = self.client.get(self.generated_activ_link)
+        assert response.status_code == 302
+        assert response.url == '/profile/'
+
+    @pytest.mark.django_db
+    def test_activation_fail(self):
+        activation_link_with_bad_user = self.generated_activ_link.replace(urlsafe_base64_encode(force_bytes(self.user.pk)).decode(),'LTE')
+        response = self.client.get(activation_link_with_bad_user)
+        response_html = (str(response.getvalue()).replace('\\n',''))
+        assert response.status_code == 200
+        assert '<title>Invalid activation!</title>' in response_html
+        
+   
 
 
 
-
- 
+  
