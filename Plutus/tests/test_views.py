@@ -102,7 +102,16 @@ class TestSignUp:
         assert '<title>Invalid activation!</title>' in response_html
         
    
+    @pytest.mark.django_db
+    def test_auth_user_profile_access_and_post(self,user_client):
+        response = user_client.post(reverse('user_login_register_app:profile'),data={'_user_pln_per_km':2})
+        user = User.objects.get(email='testuser@gmail.com')
+        assert response.status_code == 200
+        assert user.profile._user_pln_per_km == 2
 
 
-
+    @pytest.mark.django_db
+    def test_unauth_user_profile_access(self):
+        response = self.client.post(reverse('user_login_register_app:profile'),data={'_user_pln_per_km':2})
+        assert response.status_code == 302
   
