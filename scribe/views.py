@@ -18,7 +18,6 @@ class GetTransitPoints(View):
         date_form = DateFilterForm()
         all_routs = TransitRouteModel.objects.filter(user_instance=request.user).order_by('-transit_date')
         sum_of_paycheck = sum(rout.get_paycheck_for_route() for rout in all_routs)
-        print(sum_of_paycheck)
         context = {'transit_points_form': list(transit_points_form),
                    'all_routs': all_routs,
                    'date_form': date_form,
@@ -75,10 +74,8 @@ class GetTransitPoints(View):
             transit_points_form = TransitRouteForm(request.POST)
             try:
                 if transit_points_form.is_valid():
-                    print('is valid')
                     posted_transit_points_form = transit_points_form.save(commit=False)
                     posted_transit_points_form.user_instance = request.user
-                    print('Numer'+ transit_points_form.cleaned_data.get('origin_number'))
                     get_data_from_google_api = GetDataFromGoogleMap()
                     posted_transit_points_form.origin_street,\
                     posted_transit_points_form.origin_city,\

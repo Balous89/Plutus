@@ -22,7 +22,6 @@ User = get_user_model()
 def signup(request):
     if request.method == 'POST':
         form = SignUpForm(request.POST)
-        print(form['email'])
         if form.is_valid():
             user = form.save(commit=False)
             user.active = False
@@ -52,14 +51,9 @@ def activate(request, uidb64, token):
         user = None
 
     if user is not None and account_activation_token.check_token(user, token):
-        print('USER:',user.username)
-        print('TOKEN CORRECT:',bool(account_activation_token.check_token(user, token)))
         user.active = True
-        print('ACTIVE')
         user.profile.email_confirmed = True
-        print('CONFIRMED')
         user.save()
-        print('SAVED')
         login(request, user)
         return redirect('user_login_register_app:profile')
     else:

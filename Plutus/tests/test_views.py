@@ -5,6 +5,7 @@ from django.test import TestCase
 import httpretty
 from unittest import mock
 from google_hermes.views import GetDataFromGoogleMap
+from scribe.views import GetTransitPoints
 from django.test.client import Client
 from django.urls import reverse
 import pytest
@@ -22,26 +23,46 @@ from asyncio.transports import BaseTransport
 from user_login_register_app.views import activate
 from user_login_register_app.tokens import account_activation_token
 from django.contrib.sites.models import Site
+import unittest
+import requests
+
 
 
 User = get_user_model()
 
+# class TestGetDataFromGoogleMap:
+
+#     
+
+
 class TestGetDataFromGoogleMap:
+
+    def test_request_post_to_api(self):
+        with mock.patch.object(requests, 'post') as mocked_method:
+            mocked_method.return_value.status_code = 200
+           
+            response = requests.post(reverse('scribe:transitrouteform'),data={'destination_city':'Wroclaw',
+                                                                        'destination_district':'Dolnośląskie',
+                                                                        'destination_number':34,
+                                                                        'destination_street':'Hallera',
+                                                                        'origin_city':'Klodzko',
+                                                                        'origin_district':'Dolnośląskie',
+                                                                        'origin_number':1,
+                                                                        'origin_street':'Walecznych'})
+            assert response.status_code == 200
+
 
     def test_make_request(self):
         request_klass = GetDataFromGoogleMap()
 
         with mock.patch.object(GetDataFromGoogleMap, 'make_request') as mocked_method:
-            mocked_method.return_value = {"destination_addresses": ["Petuniowa 9, 53-238 Wrocław, Poland"],
-                                                     "origin_addresses": ["Osiedle Bolesława Śmiałego 38, Poznań, Poland"],
-                                                     "rows": [{"elements": [{"distance": {"text": "184 km", "value": 184415},
-                                                                             "duration": {"text": "2 hours 33 mins", "value": 9198}, "status": "OK"}]}], "status": "OK"
-                                                     }
+            mocked_method.return_value = ('Osiedle Bolesława Śmiałego 38','Poznań','Petuniowa 9','Wrocław',float(189))
 
             response = request_klass.make_request(
                 38, 'Osiedle Bolesława Śmiałego', 'Poznań', 'Wielkopolskie', 9, 'Petuniowa', 'Wrocław', 'Dolnośląskie')
 
-        assert response['rows'][0]['elements'][0]['distance']['text'] == "184 km"
+            assert response[4] == 189.0
+
 
 
 class TestSignUp:
