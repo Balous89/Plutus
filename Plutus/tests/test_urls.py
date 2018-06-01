@@ -10,7 +10,7 @@ import pytest
 
 User = get_user_model()
 
- 
+  
 
 class TestUrls:
 
@@ -44,12 +44,8 @@ class TestUrls:
 		('user_login_register_app:profile','<title>Twoj profil</title>')
 		])	 
 	@pytest.mark.django_db
-	def test_notatnik_page_content(self,url_name,html_content): 
-		self.client = Client()
-		self.user = User.objects.create_user('testuser@infosec_remedy.com',
-			'testuser',password='bumerang',is_active=True)
-		self.client.login(email='testuser@infosec_remedy.com', password='bumerang') 
-		response = self.client.get(reverse(url_name))
+	def test_notatnik_page_content(self,url_name,html_content,user_client): 
+		response = user_client.get(reverse(url_name))
 		html = str(response.getvalue()).replace('\\n','')
 		assert response.status_code == 200
 		assert html_content in html
@@ -58,4 +54,5 @@ class TestUrls:
  
   
 
-    
+     
+ 
