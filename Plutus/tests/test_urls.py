@@ -1,10 +1,6 @@
-from django.urls import reverse,resolve
-from django.http import HttpRequest
-from scribe.views import home_page
-from user_login_register_app.views import signup
+from django.urls import reverse
 from django.test.client import Client
 from django.contrib.auth import get_user_model
-from django.contrib.auth.views import login as generic_login
 
 import pytest
 

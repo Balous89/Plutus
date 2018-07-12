@@ -1,11 +1,7 @@
 from django.db import models
 from scribe.includes.districts import districts
 from django.core.validators import RegexValidator
-from django.utils.translation import ugettext_lazy as _
-from django.utils import timezone
-from django.core.validators import RegexValidator
 from .includes.regexes import forbidden_chars_pattern, forbidden_chars_message
-from user_login_register_app.models import Profile
 from django.contrib.auth import get_user_model
 
 import datetime
@@ -34,24 +30,24 @@ class TransitRouteModel(models.Model):
                                        validators=[RegexValidator(
                                            regex=forbidden_chars_pattern, 
                                            message=forbidden_chars_message)],
-                                       default='districts.dol')
+                                       )
 
     destination_street = models.CharField(max_length=40,
                                           validators=[RegexValidator(
                                             regex=forbidden_chars_pattern, 
                                             message=forbidden_chars_message)], 
-                                          default='Hallera', )
+                                          )
     destination_city = models.CharField(max_length=40, validators=[
                                         RegexValidator(
                                             regex=forbidden_chars_pattern, 
                                             message=forbidden_chars_message)], 
-                                        default='Wroclaw')
+                                        )
     
     destination_district = models.CharField(max_length=30, choices=districts, 
                                             null=True, validators=[RegexValidator(
                                                 regex=forbidden_chars_pattern, 
                                                 message=forbidden_chars_message)], 
-                                            default='districts.dol')
+                                            )
 
     paycheck_for_route = models.DecimalField(max_digits=6, decimal_places=2, default=0)
 

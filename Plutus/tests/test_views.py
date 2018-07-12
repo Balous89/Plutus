@@ -1,29 +1,18 @@
 # -*- coding: utf-8 -*-
 from __future__ import unicode_literals
 
-from django.test import TestCase
-import httpretty
+
 from unittest import mock
 from google_hermes.views import GetDataFromGoogleMap
-from scribe.views import GetTransitPoints
 from django.test.client import Client
 from django.urls import reverse
 import pytest
 from django.contrib.auth import get_user_model
-from pprint import pprint
-import json
-from django.core.mail import send_mail
 from django.core import mail
 from django.utils.encoding import force_bytes
-from django.utils.encoding import force_text
 from django.utils.http import urlsafe_base64_encode
-from django.utils.http import urlsafe_base64_decode
-from user_login_register_app.tokens import account_activation_token
-from asyncio.transports import BaseTransport
-from user_login_register_app.views import activate
 from user_login_register_app.tokens import account_activation_token
 from django.contrib.sites.models import Site
-import unittest
 import requests
 
 
@@ -56,10 +45,10 @@ class TestGetDataFromGoogleMap:
         request_klass = GetDataFromGoogleMap()
 
         with mock.patch.object(GetDataFromGoogleMap, 'make_request') as mocked_method:
-            mocked_method.return_value = ('Osiedle Bolesława Śmiałego 38','Poznań','Petuniowa 9','Wrocław',float(189))
+            mocked_method.return_value = ('Osiedle Bolesława Śmiałego 38','Poznań','Hallera 182','Wrocław',float(189))
 
             response = request_klass.make_request(
-                38, 'Osiedle Bolesława Śmiałego', 'Poznań', 'Wielkopolskie', 9, 'Petuniowa', 'Wrocław', 'Dolnośląskie')
+                38, 'Osiedle Bolesława Śmiałego', 'Poznań', 'Wielkopolskie', 182, 'Hallera', 'Wrocław', 'Dolnośląskie')
 
             assert response[4] == 189.0
 
